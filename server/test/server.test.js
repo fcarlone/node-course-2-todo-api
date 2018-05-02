@@ -8,10 +8,12 @@ const {ObjectID} = require('mongodb');
 // Seed data
 const todos = [{
   _id: new ObjectID(),
-  text: 'First test todo'
+  text: 'First test todo',
+  completed: true,
+  completedAt: 1525277610964
 }, {
   _id: new ObjectID(),
-  text: 'Second test todo'
+  text: 'Second test todo',
 }];
 // Testing life cycle method - make sure database is empty
 beforeEach((done) => {
@@ -138,6 +140,46 @@ describe('GET /todos', () => {
         .delete('/todos/123')
         .expect(404)
         .end(done);
+    });
+  });
+
+  describe('PATCH /todos/:id', () => {
+    it('should update the todo', (done) => {
+      id = todos[0]._id.toHexString();
+      text = "Test PATCH route";
+
+      request(app)
+        .patch(`/todos/${id}`)
+        .send({
+          text: text,
+          completed: true,
+        })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.todo.text).toBe(text)
+          expect(res.body.todo.completed).toBe(true)
+          // expect(res.body.todo.completedAt).toBeType('number');
+        })
+        .end(done)
+    });
+
+    it('should clear completedAt wheh todo is not completed', (done) => {
+      id = todos[1]._id.toHexString();
+      text = 'Text second todo PATCH route'
+
+      request(app)
+        .patch(`/todos/${id}`)
+        .send({
+          text: text,
+          completed: false
+        })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.todo.text).toBe(text)
+          expect(res.body.todo.completed).toBe(false)
+          expect(res.body.todo.completedAt).toBeFalsy()
+        })
+        .end(done)
     });
   });
 
