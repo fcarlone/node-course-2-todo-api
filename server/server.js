@@ -63,33 +63,6 @@ app.get('/todos/:id', authenticate, async (req, res) => {
   }
 });
 
-
-// duplicate
-// app.get('/todos/:id', authenticate, (req, res) => {
-//   // res.send(req.params);
-//   var id = req.params.id;
-//
-//   // Valid id using isValid
-//     // 404 - send back empty send
-//   if (!ObjectID.isValid(id)) {
-//     return res.status(404).send();
-//   };
-//   // findById
-//   Todo.findOne({
-//     _id: id,
-//     _creator: req.user._id
-//   }).then((todo) => {
-//     if (!todo) {
-//       // if no todo - send back 404 with empty body
-//       return res.status(404).send();
-//     }
-//       // if todo - send it back
-//       res.send({todo});
-//   //  error 400 - and send empty body back
-//   }).catch((e) => res.status(400).send());
-// });
-
-
 // Remove todo
 app.delete('/todos/:id', authenticate, (req, res) => {
   var id = req.params.id;
@@ -148,15 +121,6 @@ app.post('/users', async (req, res) => {
   } catch (e) {
       res.status(400).send(e);
   }
-
-  // user.save().then(() => {
-  //   // res.send(user);
-  //   return user.generateAuthToken();
-  // }).then((token) => {
-  //   res.header('x-auth', token).send(user);
-  // }).catch((e) => {
-  //   res.status(400).send(e);
-  // });
 });
 
 app.get('/users/me', authenticate, (req, res) => {
